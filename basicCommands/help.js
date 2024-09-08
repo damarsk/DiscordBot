@@ -22,25 +22,25 @@ module.exports = {
         // Basic commands category
         {
           name: '▶️  Basic',
-          value: '`avatar`, `owner`, `support`, `invite`, `userinfo`, `ping`',
+          value: '`avatar`, `date`, `help`, `lirik`, `news`, `prefix`',
           inline: true,
         },
         //fun category
         {
           name: '▶️  Fun',
-          value: ' `ascii`,`meme`, `joke`, `say`, `roll`, `memeid`, `jokeid`',
+          value: ' `ascii`, `hack`, `joke`, `jokeid`, `meme`, `memeid`, `quotes`, `roll`, `say`',
           inline: true,
         },
-        //Animal category
+        //Image category
         {
-          name: '▶️  Animal Image',
+          name: '▶️  Images',
           value: '`animal {type}`, `listanimal`',
           inline: true,
         },
         //anime category
         {
           name: '▶️  Anime',
-          value: '`hug`, `slap`, `pat`, `kiss`, `animecommands`',
+          value: '`hug`, `cry`, `pat`, `sad`, `animecommands`',
           inline: true,
         },
         //aritmatika category
@@ -52,7 +52,7 @@ module.exports = {
         // Utility commands category
         {
           name: '▶️  Utility',
-          value: '`kick`, `ban`, `serverinfo`, `clear`, `uptime`',
+          value: '`ban`, `changeprefix`, `clear`, `kick`, `owner`, `ping`, `serverinfo`, `support`, `uptime`, `userinfo`',
           inline: true,
         }
       )

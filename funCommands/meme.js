@@ -1,24 +1,27 @@
 const axios = require('axios');
 const { EmbedBuilder } = require('discord.js');
 const db = require("../mongodb");
+
 module.exports = {
   name: 'meme',
   description: 'Meme',
   async execute(message, args) {
     try {
-      const response = await axios.get('https://meme-api.com/gimme');
-      const { url, author } = response.data;
+      const response = await axios.get('https://api.imgflip.com/get_memes');
+      
+      // Memilih meme secara acak
+      const memes = response.data.data.memes;
+      const randomMeme = memes[Math.floor(Math.random() * memes.length)];
 
       const embed = new EmbedBuilder()
         .setColor('#FFC0CB')
-        .setTitle('Random Meme')
-        .setDescription(`Author : ${author}`)
-        .setImage(`${url}`);
+        .setTitle(`${randomMeme.name}`)
+        .setImage(`${randomMeme.url}`);
 
       message.reply({ embeds: [embed] });
     } catch (error) {
-      console.error('Error fetching joke:', error);
-      message.reply('Sorry, I couldn\'t tell a joke at the moment.');
+      console.error('Error fetching meme:', error);
+      message.reply('Sorry, I couldn\'t fetch a meme at the moment.');
     }
   },
 };
