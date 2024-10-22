@@ -36,9 +36,23 @@ module.exports = {
         searchMessage.edit('Lagu ditemukan!');
       }, 2000);
 
+      // Fungsi untuk membagi dan mengirim lirik
+      const sendLyrics = (lyrics) => {
+        const MAX_LENGTH = 2000;
+        let startIndex = 0;
+
+        while (startIndex < lyrics.length) {
+          const endIndex = Math.min(startIndex + MAX_LENGTH, lyrics.length);
+          const part = lyrics.substring(startIndex, endIndex);
+          message.channel.send(part);
+          startIndex = endIndex;
+        }
+      };
+
       // Tampilkan lirik lagu setelah beberapa saat
       setTimeout(() => {
-        message.channel.send(`*${title}*\nOleh *${artist}*\n\n${lyrics}`);
+        message.channel.send(`*${title}*\nOleh *${artist}*`);
+        sendLyrics(lyrics);
       }, 4000);
 
     } catch (error) {
