@@ -1,7 +1,7 @@
-const status = "AUTOMATIC";
-const botName = "🌇 MULTI MUSIX";
-const rtxText = "RTX";
-const version = "Latest@ v1.2"; 
+const status = "SMK ANGKASA";
+const botName = "🌇 MULTI FUNCTION";
+const rtxText = "DAMAR";
+const version = "Latest@ v1.3"; 
 const startTime = Date.now();
 
 function printWatermark() {

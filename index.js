@@ -1,24 +1,14 @@
 const { Client, GatewayIntentBits, ActivityType } = require('discord.js');
-const { EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
 require('dotenv').config();
-const figlet = require('figlet');
-const { DisTube } = require('distube');
 
 const client = new Client({
-  intents: Object.keys(GatewayIntentBits).map((a) => {
-    return GatewayIntentBits[a];
-  }),
+  intents: Object.keys(GatewayIntentBits).map((key) => GatewayIntentBits[key]),
 });
-const { printWatermark } = require('./functions/handlers');const distube = new DisTube(client, {
-  searchSongs: 0,
-  emitNewSongOnly: true,
-  leaveOnEmpty: true,
-  leaveOnFinish: true,
-  leaveOnStop: true,
-});
+
+const { printWatermark } = require('./functions/handlers');
 
 const prefixData = require('./data/prefix.json');
 let prefix = prefixData.prefix;
@@ -113,20 +103,42 @@ async function login() {
   }
 }
 
-
 client.once('ready', () => {
-  setTimeout(() => {
-    console.log('\x1b[32m%s\x1b[0m', `|    🎯 Activity sucessfully set!`);
-    client.user.setPresence({
-      activities: [{ name: `Siswa/Siswi`, type: ActivityType.Watching }],
-      status: 'dnd',
-    });
-  }, 2000); 
+  const bios = [
+      "[ https://s.id/MabarPPLG ] - Server PPLG\n*Help Commands* `.help`\nPowered by GPT 4o!",
+  ];
+  let index = 0;  
+  setInterval(() => {
+      client.application.fetch()
+          .then(app => {
+              app.edit({
+                  description: bios[index],
+              }).catch(console.error);
+
+              index = (index + 1) % bios.length;
+          })
+          .catch(console.error);
+  }, 5000);
 });
 
+client.once('ready', () => {
+  console.log('\x1b[32m%s\x1b[0m', `| 🎯 Bot is ready and status will rotate every 5 seconds!`);
+  const activities = [
+    { name: 'Siswa/Siswi SMK A1', type: ActivityType.Watching },
+    { name: 'MabarPPLG Server', type: ActivityType.Watching },
+    { name: '.help for Help', type: ActivityType.Listening },
+  ];
+  let index = 0;
+  setInterval(() => {
+    client.user.setPresence({
+      activities: [activities[index]],
+      status: 'online',
+    });
+    index = (index + 1) % activities.length;
+  }, 5000);
+});
 
 login();
-
 
 setInterval(() => {
   if (!client || !client.user) {

@@ -8,9 +8,9 @@ module.exports = {
     name: 'news',
     description: 'Berita terbaru CNN Indonesia',
     async execute(message, args) {
-        const channelId = '1282728506819874928'; // Ganti dengan ID channel yang ingin kamu gunakan
+        const channelId = '1299977039960477696';
+        const channelTechId = '1299978376446218300';
         if (message.author.id !== '592652763113193472') {
-            // Optional: Only allow specific users to restart the bot
            return message.reply('You do not have permission to use this command.');
         }
 
@@ -18,11 +18,15 @@ module.exports = {
         const fetchNews = async () => {
             try {
                 const response = await axios.get('https://api-berita-indonesia.vercel.app/cnn/terbaru/');
+                const response2 = await axios.get('https://api-berita-indonesia.vercel.app/cnn/teknologi/');
                 const { data } = response.data;
+                const { data: data2 } = response2.data;
 
-                if (data && data.posts && data.posts.length > 0) {
+                if (data && data.posts && data.posts.length > 0 && data2 && data2.posts && data2.posts.length > 0) {
                     const randomIndex = Math.floor(Math.random() * data.posts.length);
+                    const randomIndex2 = Math.floor(Math.random() * data2.posts.length);
                     const randomArticle = data.posts[randomIndex];
+                    const randomArticle2 = data2.posts[randomIndex2];
                     
                     const embed = new EmbedBuilder()
                         .setColor('#0099ff')
@@ -31,11 +35,20 @@ module.exports = {
                         .setURL(randomArticle.link)
                         .setImage(randomArticle.thumbnail)
                         .setFooter({ text: 'Source: CNN Indonesia' });
-
                     const newsChannel = message.client.channels.cache.get(channelId);
+
+                    const embed2 = new EmbedBuilder()
+                        .setColor('#0099ff')
+                        .setTitle(randomArticle2.title)
+                        .setDescription(randomArticle2.description)
+                        .setURL(randomArticle2.link)
+                        .setImage(randomArticle2.thumbnail)
+                        .setFooter({ text: 'Source: CNN Indonesia' });
+                    const newsChannelTech = message.client.channels.cache.get(channelTechId);
                     
-                    if (newsChannel) {
+                    if (newsChannel && newsChannelTech) {
                         newsChannel.send({ embeds: [embed] });
+                        newsChannelTech.send({ embeds: [embed2] });
                     } else {
                         console.error("Channel tidak ditemukan dengan ID:", channelId);
                         message.reply('Channel berita tidak ditemukan.');
@@ -51,11 +64,18 @@ module.exports = {
 
         // Logika untuk menghidupkan/mematikan berita otomatis
         if (onOff === 0) {
-            onOff = 1;
+            const newsChannel = message.client.channels.cache.get(channelId);
+            
+            if (!newsChannel) {
+                console.error("Channel tidak ditemukan dengan ID:", channelId);
+                return message.reply('Channel berita tidak ditemukan.');
+            }
+
+            onOff = 1; // Hanya set ke 1 jika channel ditemukan
             await fetchNews(); // Panggil berita pertama kali
             intervalId = setInterval(async () => {
                 await fetchNews();
-            }, 3600000); // Ubah interval sesuai kebutuhan (60 detik)
+            }, 3600000); // Interval 1 jam (3600000 ms)
             message.reply('Berita otomatis telah dinyalakan.');
         } else {
             onOff = 0;
