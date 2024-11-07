@@ -8,6 +8,11 @@ const client = new Client({
   intents: Object.keys(GatewayIntentBits).map((key) => GatewayIntentBits[key]),
 });
 
+const client2 = new Client({
+  intents: Object.keys(GatewayIntentBits).map((key) => GatewayIntentBits[key]),
+  partials: ['MESSAGE', 'CHANNEL', 'GUILD_MEMBER']
+});
+
 const { printWatermark } = require('./functions/handlers');
 
 const prefixData = require('./data/prefix.json');
@@ -21,12 +26,12 @@ app.get('/', (req, res) => {
 });
 app.listen(port, () => {
   console.log(`🔗 Listening to MabarPPLG: http://localhost:${port}`);
-  console.log(`🔗 Replit URL: https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`);
 });
 printWatermark();
 
 client.commands = new Map();
 
+// Client 1 - Perintah untuk Bot
 const funCommandsPath = path.join(__dirname, 'funCommands');
 const animeCommandsPath = path.join(__dirname, 'AnimeCommands');
 const utilityCommandsPath = path.join(__dirname, 'utilityCommands');
@@ -88,63 +93,105 @@ client.on('messageCreate', (message) => {
   }
 });
 
-
-async function login() {
-  try {
-    await client.login(process.env.TOKEN);
-    console.log('\x1b[32m%s\x1b[0m', '|    🍔 Bot logged in successfully!');
-    console.log('\x1b[36m%s\x1b[0m', '|    🚀 Commands Loaded successfully!');
-    console.log('\x1b[32m%s\x1b[0m', `|    🌼 Logged in as ${client.user.username}`);
-    console.log('\x1b[36m%s\x1b[0m', `|    🏡 Bot is in ${client.guilds.cache.size} servers`);
-  } catch (error) {
-    console.error('\x1b[31m%s\x1b[0m', '❌ Failed to log in:', error);
-    console.log('\x1b[31m%s\x1b[0m', '❌ Client Not Login, Restarting Process...');
-    process.kill(1);
-  }
-}
-
 client.once('ready', () => {
   const bios = [
-      "[ https://s.id/MabarPPLG ] - Server PPLG\n*Help Commands* `.help`\nPowered by GPT 4o!",
+    "[ https://s.id/MabarPPLG ] - Server PPLG\n*Help Commands* `.help`\nPowered by GPT 4o!",
   ];
   let index = 0;  
   setInterval(() => {
-      client.application.fetch()
-          .then(app => {
-              app.edit({
-                  description: bios[index],
-              }).catch(console.error);
+    client.application.fetch()
+      .then(app => {
+        app.edit({
+          description: bios[index],
+        }).catch(console.error);
 
-              index = (index + 1) % bios.length;
-          })
-          .catch(console.error);
+        index = (index + 1) % bios.length;
+      })
+      .catch(console.error);
   }, 5000);
-});
 
-client.once('ready', () => {
-  console.log('\x1b[32m%s\x1b[0m', `| 🎯 Bot is ready and status will rotate every 5 seconds!`);
+  console.log('\x1b[32m%s\x1b[0m', `| 🎯 Bot 1 is ready and status will rotate every 5 seconds!`);
+
   const activities = [
     { name: 'Siswa/Siswi SMK A1', type: ActivityType.Watching },
     { name: 'MabarPPLG Server', type: ActivityType.Watching },
     { name: '.help for Help', type: ActivityType.Listening },
   ];
-  let index = 0;
+  let index2 = 0;
   setInterval(() => {
     client.user.setPresence({
-      activities: [activities[index]],
+      activities: [activities[index2]],
       status: 'online',
     });
-    index = (index + 1) % activities.length;
+    index2 = (index2 + 1) % activities.length;
   }, 5000);
 });
 
+// Client 2 - Hanya untuk bio dan status
+client2.once('ready', () => {
+  const bios = [
+    "[ https://s.id/MabarPPLG ] - Server PPLG\n*Help Commands* `.help`\nPowered by GPT 4o!",
+  ];
+  let index = 0;  
+  setInterval(() => {
+    client2.application.fetch()
+      .then(app => {
+        app.edit({
+          description: bios[index],
+        }).catch(console.error);
+
+        index = (index + 1) % bios.length;
+      })
+      .catch(console.error);
+  }, 5000);
+
+  console.log('\x1b[32m%s\x1b[0m', `| 🎯 Bot 2 is ready and status will rotate every 5 seconds!`);
+
+  const activities = [
+    { name: 'Siswa/Siswi SMK A1', type: ActivityType.Watching },
+    { name: 'MabarPPLG Server', type: ActivityType.Watching },
+    { name: '.help for Help', type: ActivityType.Listening },
+  ];
+  let index2 = 0;
+  setInterval(() => {
+    client2.user.setPresence({
+      activities: [activities[index2]],
+      status: 'online',
+    });
+    index2 = (index2 + 1) % activities.length;
+  }, 5000);
+});
+
+async function login() {
+  try {
+    await client.login(process.env.TOKEN);
+    console.log('\x1b[32m%s\x1b[0m', '|    🍔 Bot 1 logged in successfully!');
+  } catch (error) {
+    console.error('\x1b[31m%s\x1b[0m', '❌ Failed to log in Client 1:', error);
+  }
+}
+
+async function login2() {
+  try {
+    await client2.login(process.env.TOKEN2);  // Pastikan Anda sudah menambahkan token Client 2 di .env
+    console.log('\x1b[32m%s\x1b[0m', '|    🍔 Bot 2 logged in successfully!');
+  } catch (error) {
+    console.error('\x1b[31m%s\x1b[0m', '❌ Failed to log in Client 2:', error);
+  }
+}
+
 login();
+login2();
 
 setInterval(() => {
   if (!client || !client.user) {
-    console.log('\x1b[31m%s\x1b[0m', '❌ Client Not Logged in, Restarting Process...');
+    console.log('\x1b[31m%s\x1b[0m', '❌ Client 1 Not Logged in, Restarting Process...');
+    process.kill(1);
+  }
+  if (!client2 || !client2.user) {
+    console.log('\x1b[31m%s\x1b[0m', '❌ Client 2 Not Logged in, Restarting Process...');
     process.kill(1);
   }
 }, 15000);
 
-module.exports = client;
+module.exports = { client, client2 };

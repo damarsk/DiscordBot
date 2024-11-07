@@ -15,7 +15,7 @@ module.exports = {
       { name: '▶️  Fun', value: '`ascii`, `hack`, `joke`, `jokeid`, `meme`, `memeid`, `quotes`, `roll`, `say`' },
       { name: '▶️  Images', value: '`animal {type}`, `listanimal`' },
       { name: '▶️  Anime', value: '`blush`, `bonk`, `bully`, `cry`, `cuddle`, `dance`, `highfive`, `hug`, `kiss`, `pat`, `sad`, `slap`, `thinking`, `wave`, `wink`, `yes`, `animecommands`' },
-      { name: '▶️  Aritmatika', value: '`add`, `sub`, `multi`, `div`' },
+      { name: '▶️  Aritmatika', value: '`add`, `sub`, `multi`, `div`, `akar`' },
       { name: '▶️  Utility', value: '`ban`, `changeprefix`, `clear`, `kick`, `owner`, `ping`, `serverinfo`, `support`, `uptime`, `userinfo`' }
     ];
 
