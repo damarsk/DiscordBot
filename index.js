@@ -8,11 +8,6 @@ const client = new Client({
   intents: Object.keys(GatewayIntentBits).map((key) => GatewayIntentBits[key]),
 });
 
-const client2 = new Client({
-  intents: Object.keys(GatewayIntentBits).map((key) => GatewayIntentBits[key]),
-  partials: ['MESSAGE', 'CHANNEL', 'GUILD_MEMBER']
-});
-
 const { printWatermark } = require('./functions/handlers');
 
 const prefixData = require('./data/prefix.json');
@@ -127,41 +122,6 @@ client.once('ready', () => {
   }, 5000);
 });
 
-// Client 2 - Hanya untuk bio dan status
-client2.once('ready', () => {
-  const bios = [
-    "[ https://s.id/MabarPPLG ] - Server PPLG\n*Help Commands* `.help`\nPowered by GPT 4o!",
-  ];
-  let index = 0;  
-  setInterval(() => {
-    client2.application.fetch()
-      .then(app => {
-        app.edit({
-          description: bios[index],
-        }).catch(console.error);
-
-        index = (index + 1) % bios.length;
-      })
-      .catch(console.error);
-  }, 5000);
-
-  console.log('\x1b[32m%s\x1b[0m', `| 🎯 Bot 2 is ready and status will rotate every 5 seconds!`);
-
-  const activities = [
-    { name: 'Siswa/Siswi SMK A1', type: ActivityType.Watching },
-    { name: 'MabarPPLG Server', type: ActivityType.Watching },
-    { name: '.help for Help', type: ActivityType.Listening },
-  ];
-  let index2 = 0;
-  setInterval(() => {
-    client2.user.setPresence({
-      activities: [activities[index2]],
-      status: 'online',
-    });
-    index2 = (index2 + 1) % activities.length;
-  }, 5000);
-});
-
 async function login() {
   try {
     await client.login(process.env.TOKEN);
@@ -171,26 +131,13 @@ async function login() {
   }
 }
 
-async function login2() {
-  try {
-    await client2.login(process.env.TOKEN2);  // Pastikan Anda sudah menambahkan token Client 2 di .env
-    console.log('\x1b[32m%s\x1b[0m', '|    🍔 Bot 2 logged in successfully!');
-  } catch (error) {
-    console.error('\x1b[31m%s\x1b[0m', '❌ Failed to log in Client 2:', error);
-  }
-}
-
 login();
-login2();
 
 setInterval(() => {
   if (!client || !client.user) {
     console.log('\x1b[31m%s\x1b[0m', '❌ Client 1 Not Logged in, Restarting Process...');
     process.kill(1);
-  } else if (!client2 || !client2.user) {
-    console.log('\x1b[31m%s\x1b[0m', '❌ Client 2 Not Logged in, Restarting Process...');
-    process.kill(1);
   }
 }, 15000);
 
-module.exports = { client, client2 };
+module.exports = { client };
