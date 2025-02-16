@@ -187,8 +187,7 @@ setInterval(() => {
   if (!client || !client.user) {
     console.log('\x1b[31m%s\x1b[0m', '❌ Client 1 Not Logged in, Restarting Process...');
     process.kill(1);
-  }
-  if (!client2 || !client2.user) {
+  } else if (!client2 || !client2.user) {
     console.log('\x1b[31m%s\x1b[0m', '❌ Client 2 Not Logged in, Restarting Process...');
     process.kill(1);
   }
