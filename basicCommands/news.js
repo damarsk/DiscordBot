@@ -14,21 +14,16 @@ module.exports = {
         }
 
         const channelId = '1299977039960477696';
-        const channelTechId = '1299978376446218300';
 
         // Fungsi untuk mengambil berita
         const fetchNews = async () => {
             try {
                 const response = await axios.get('https://api-berita-indonesia.vercel.app/cnn/terbaru/');
-                const response2 = await axios.get('https://api-berita-indonesia.vercel.app/cnn/teknologi/');
                 const { data: data1 } = response.data;
-                const { data: data2 } = response2.data;
 
-                if (data1 && data1.posts && data1.posts.length > 0 && data2 && data2.posts && data2.posts.length > 0) {
+                if (data1 && data1.posts && data1.posts.length > 0) {
                     const randomIndex1 = Math.floor(Math.random() * data1.posts.length);
-                    const randomIndex2 = Math.floor(Math.random() * data2.posts.length);
                     const randomArticle1 = data1.posts[randomIndex1];
-                    const randomArticle2 = data2.posts[randomIndex2];
                     
                     const embed1 = new EmbedBuilder()
                         .setColor('#0099ff')
@@ -38,20 +33,10 @@ module.exports = {
                         .setImage(randomArticle1.thumbnail)
                         .setFooter({ text: 'Source: CNN Indonesia' });
 
-                    const embed2 = new EmbedBuilder()
-                        .setColor('#0099ff')
-                        .setTitle(randomArticle2.title)
-                        .setDescription(randomArticle2.description)
-                        .setURL(randomArticle2.link)
-                        .setImage(randomArticle2.thumbnail)
-                        .setFooter({ text: 'Source: CNN Indonesia' });
-
                     const newsChannel = message.client.channels.cache.get(channelId);
-                    const newsChannelTech = message.client.channels.cache.get(channelTechId);
 
-                    if (newsChannel && newsChannelTech) {
+                    if (newsChannel) {
                         await newsChannel.send({ embeds: [embed1] });
-                        await newsChannelTech.send({ embeds: [embed2] });
                     } else {
                         console.error("Channel tidak ditemukan.");
                         message.reply('Channel berita tidak ditemukan.');
